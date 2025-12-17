@@ -1,75 +1,68 @@
 import { useState, useEffect } from 'react'
+import './App.css'
 
 function App() {
-  // 1. STATE: Where we store our data
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
 
-  // 2. EFFECT: Fetch data when the component mounts
   useEffect(() => {
-    fetch('https://fakestoreapi.com/products') // The API URL
-      .then(res => res.json()) // Convert response to JSON
+    fetch('https://fakestoreapi.com/products')
+      .then(res => res.json())
       .then(data => {
-        setProducts(data) // Save data to our state
-        setLoading(false) // Stop loading
+        setProducts(data)
+        setLoading(false)
       })
-      .catch(err => console.error("Error fetching data:", err))
+      .catch(err => console.error("Error:", err))
   }, [])
 
-  // 3. RENDER: What the user sees
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <h1 style={{ textAlign: 'center' }}>🔥 React Mini-Store</h1>
-      
-      {/* Show a loading message if data isn't ready yet */}
-      {loading && <p style={{ textAlign: 'center' }}>Loading products...</p>}
+    <div className="app-container">
+      {/* 1. Navigation Bar */}
+      <nav className="navbar">
+        <div className="logo">MODERN STORE</div>
+        <div className="nav-links">
+          <span>Men</span>
+          <span>Women</span>
+          <span>Accessories</span>
+        </div>
+        <div className="cart-icon">Cart (0)</div>
+      </nav>
 
-      {/* The Grid */}
-      <div style={gridStyle}>
-        {products.map(product => (
-          <div key={product.id} style={cardStyle}>
-            <img src={product.image} alt={product.title} style={imageStyle} />
-            <h3 style={{ fontSize: '16px', margin: '10px 0' }}>{product.title}</h3>
-            <p style={{ fontWeight: 'bold', color: '#007bff' }}>${product.price}</p>
-            <button style={buttonStyle}>Add to Cart</button>
-          </div>
-        ))}
-      </div>
+      {/* 2. Hero Section - The big banner at the top */}
+      <header className="hero">
+        <div className="hero-content">
+          <h1>SUMMER DROPS</h1>
+          <p>New arrivals are here. Get 20% off this week.</p>
+        </div>
+      </header>
+
+      {/* 3. Main Product Grid */}
+      <main className="main-content">
+        <h2 className="section-title">Trending Now</h2>
+        
+        {loading && <div className="loading">Loading collection...</div>}
+
+        <div className="product-grid">
+          {products.map(product => (
+            <div key={product.id} className="product-card">
+              <div className="image-container">
+                <img src={product.image} alt={product.title} className="product-image" />
+              </div>
+              
+              <div className="product-info">
+                <div className="product-text">
+                  <h3 className="product-title">{product.title}</h3>
+                  <p className="product-category">{product.category}</p>
+                </div>
+                <div className="product-price">${product.price}</div>
+              </div>
+              <button className="add-btn">ADD TO BAG</button>
+            </div>
+          ))}
+        </div>
+      </main>
     </div>
   )
-}
-
-// Simple internal CSS (In a real job, you'd use a separate .css file)
-const gridStyle = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', // Responsive Grid
-  gap: '20px',
-  marginTop: '20px'
-}
-
-const cardStyle = {
-  border: '1px solid #ddd',
-  borderRadius: '8px',
-  padding: '15px',
-  textAlign: 'center',
-  boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
-  backgroundColor: 'white'
-}
-
-const imageStyle = {
-  height: '100px',
-  objectFit: 'contain',
-  marginBottom: '10px'
-}
-
-const buttonStyle = {
-  backgroundColor: '#28a745',
-  color: 'white',
-  border: 'none',
-  padding: '10px 15px',
-  borderRadius: '5px',
-  cursor: 'pointer',
-  marginTop: '10px'
 }
 
 export default App
